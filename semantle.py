@@ -1,6 +1,6 @@
 import pickle
 from datetime import date, datetime
-
+import re
 from apscheduler.schedulers.background import BackgroundScheduler
 from apscheduler.triggers.cron import CronTrigger
 from flask import (
@@ -86,6 +86,8 @@ def get_guess(day: int, word: str):
         rtn["rank"] = app.nearests[day][word][0]
     else:
         try:
+            if re.search(r'[!@#$%^&*(),.?":{}|<>]', word):
+                return jsonify({"error": "unknown"}), 400
             rtn["sim"] = word2vec.similarity(app.secrets[day], word)
             rtn["rank"] = "1000위 이상"
         except KeyError:

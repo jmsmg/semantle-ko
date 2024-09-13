@@ -291,7 +291,12 @@ let Semantle = (function() {
             $('#guess').focus();
 
             const guessData = await submitGuess(guess);
-
+			const specialCharPattern = /[!@#$%^&*(),.?":{}|<>]/g;
+    
+			if (specialCharPattern.test(guess)) {
+				$('#error').textContent = `특수문자는 입력할 수 없습니다.`
+				return false; 
+			}
             if (guessData == null) {
                 $('#error').textContent = `서버가 응답하지 않습니다. 나중에 다시 시도해보세요.`
                 return false;
